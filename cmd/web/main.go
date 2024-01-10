@@ -25,20 +25,10 @@ func main() {
 		errorLog: errorLog,
 		infoLog:  infoLog,
 	}
-	mux := http.NewServeMux()
-
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
-
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/snippet/view", (*app).snippetView)
-	// Go allows method calls on a struct pointer without manual dereferencing
-	mux.HandleFunc("/snippet/create", app.snippetCreate)
-
 	srv := &http.Server{
 		Addr:     *addr,
 		ErrorLog: errorLog,
-		Handler:  mux,
+		Handler:  app.routes(),
 	}
 	infoLog.Printf("Listening on %s\n", *addr)
 	err := srv.ListenAndServe()
