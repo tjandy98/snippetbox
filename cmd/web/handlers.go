@@ -13,17 +13,16 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
-
 	}
 
 	snippets, err := app.snippets.Latest()
 	if err != nil {
 		app.serverError(w, err)
 	}
+
 	data := app.newTemplateData(r)
 	data.Snippets = snippets
 	app.render(w, http.StatusOK, "home.html", data)
-
 }
 
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
